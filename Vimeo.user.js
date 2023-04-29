@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Vimeo Tauri
 // @namespace    http://tampermonkey.net/
-// @version      0.1
+// @version      0.2
 // @description  Tauri vimeo downloader
 // @author       Tauri
 // @match        https://player.vimeo.com/video/*
@@ -16,6 +16,11 @@
     var m = '';
     if ((m = regexTitle.exec(document.documentElement.innerHTML)) !== null) {
         title = decodeURIComponent(JSON.parse('"' + m[1].replace(/\"/g, '\\"') + '"')) + '.mp4';
+    } else {
+        const regexTitle = /embedUrl":".*?"name":"(.*?)"/;
+        if ((m = regexTitle.exec(document.documentElement.innerHTML)) !== null) {
+            title = decodeURIComponent(JSON.parse('"' + m[1].replace(/\"/g, '\\"') + '"')) + '.mp4';
+        }
     }
     window.copyTitle = function() {
         document.getElementById("video_name").select();
@@ -27,7 +32,7 @@
     text +="<h3>Download</h3>";
     text += '<input type="text" id="video_name"><button onclick="window.copyTitle()">Copiar Título</button><br><br>';
 
-    const regex = /playerConfig\s*=\s*(.*?"mime":\s*"video\/mp4"[^}]*?"url":\s*"([^"]*)"[^}]*"720p".*?});/gm;
+    const regex = /playerConfig\s*=\s*([\s\S]*?"mime":\s*"video\/mp4"[^}]*?"url":\s*"([^"]*)"[^}]*"720p"[^\n;]*?})(;|\n)/gm;
     while ((m = regex.exec(document.documentElement.innerHTML)) !== null) {
         if (m.index === regex.lastIndex) {
             regex.lastIndex++;
