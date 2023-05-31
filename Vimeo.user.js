@@ -32,7 +32,7 @@
     text +="<h3>Download</h3>";
     text += '<input type="text" id="video_name"><button onclick="window.copyTitle()">Copiar Título</button><br><br>';
 
-    const regex = /playerConfig\s*=\s*([\s\S]*?"mime":\s*"video\/mp4"[^}]*?"url":\s*"([^"]*)"[^}]*"720p"[^\n;]*?})(;|\n)/gm;
+    const regex = /playerConfig\s*=\s*([\s\S]*?"mime":\s*"video\/mp4"[^}]*?"url":\s*"([^"]*)"[^}]*"720p"[^\n;]*?})(;|\n|<\/script)/gm;
     while ((m = regex.exec(document.documentElement.innerHTML)) !== null) {
         if (m.index === regex.lastIndex) {
             regex.lastIndex++;
